@@ -1,0 +1,43 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ .Release.Name }}-backend
+  namespace: {{ .Values.backend.namespace }}
+spec:
+  host: {{ .Release.Name }}-backend.{{ .Values.backend.namespace }}.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ .Release.Name }}-database
+  namespace: {{ .Values.database.namespace }}
+spec:
+  host: {{ .Release.Name }}-database.{{ .Values.database.namespace }}.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+---
+apiVersion: authentication.istio.io/v1alpha1
+kind: Policy
+metadata:
+  name: {{ .Release.Name }}-backend
+  namespace: {{ .Values.backend.namespace }}
+spec:
+  targets:
+    - name: {{ .Release.Name }}-backend
+  peers:
+    - mtls: {}
+---
+apiVersion: authentication.istio.io/v1alpha1
+kind: Policy
+metadata:
+  name: {{ .Release.Name }}-database
+  namespace: {{ .Values.database.namespace }}
+spec:
+  targets:
+    - name: {{ .Release.Name }}-database
+  peers:
+    - mtls: {}

@@ -1,0 +1,4 @@
+apiVersion: v2
+name: dummyapp
+description: A Helm chart for a scalable web application
+version: 1.0.0

@@ -1,0 +1,53 @@
+frontend:
+  name: frontend
+  host: dummy.example.com
+  tlsSecret: dummy-tls-secret
+  replicaCount: 1
+  image:
+    repository: frontend
+    tag: latest
+  service:
+    type: LoadBalancer
+    port: 80
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+backend:
+  name: backend
+  namespace: backend-namespace
+  replicaCount: 1
+  image:
+    repository: backend
+    tag: latest
+  service:
+    type: LoadBalancer
+    port: 8080
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+database:
+  name: database
+  namespace: database-namespace
+  # Actual values stored in AWS Secrets and fetched at deployment time
+  username: dummy
+  password: dummy
+  ############################
+  storageClass:
+    name: ebs-class
+    size: 1Gi
+  replicaCount: 1
+  image:
+    repository: database
+    tag: latest
+  service:
+    type: LoadBalancer
+    port: 5432
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
